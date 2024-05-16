@@ -1,0 +1,58 @@
+@server = http://localhost:34215
+@auth = Authorization: Basic alice:
+@bookId = 13063864
+
+
+### CatalogService.Books
+GET {{server}}/odata/v4/catalog/Books
+Content-Type: application/json
+{{auth}}
+
+
+### CatalogService.Books
+POST {{server}}/odata/v4/catalog/Books
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": {{bookId}},
+  "title": "title-13063863",
+  "stock": 87
+}
+
+### 
+GET {{server}}/odata/v4/catalog/Books(ID={{bookId}},IsActiveEntity=false)/attachments
+
+
+### CatalogService.Books.attachments
+# @name postAttachment
+POST {{server}}/odata/v4/catalog/Books(ID={{bookId}},IsActiveEntity=false)/attachments
+Content-Type: application/json
+{{auth}}
+
+{ 
+      "mimeType": "image/jpg",
+      "filename": "Yokohama.jpg",
+      "note": "test"
+}
+
+### Activate draft
+POST {{server}}/odata/v4/catalog/Books(ID={{bookId}},IsActiveEntity=false)/CatalogService.draftActivate
+Content-Type: application/json
+
+###
+PUT {{server}}/odata/v4/catalog/Books(ID={{bookId}},IsActiveEntity=false)/attachments(up__ID={{bookId}},ID={{postAttachment.response.body.ID}},IsActiveEntity=true)/content
+Content-Type: image/jpeg
+
+./yokohama.jpg
+
+### CatalogService.Books
+DELETE {{server}}/odata/v4/catalog/Books/13063863
+Content-Type: application/json
+{{auth}}
+
+
+### CatalogService.Books.attachments
+GET {{server}}/odata/v4/catalog/attachments
+Content-Type: application/json
+{{auth}}

@@ -1,21 +1,44 @@
 {
-  "name": "cap-attachment",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@cap-js/attachments": "^1.0.2",
-    "@sap/cds": "^7",
-    "express": "^4"
-  },
-  "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/eslint-plugin-cds": "^3",
-    "eslint": "^9"
-  },
-  "scripts": {
-    "start": "cds-serve"
-  }
+    "name": "cap-attachment",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@cap-js/attachments": "^1.0.2",
+        "@sap/cds": "^7",
+        "@sap/cds-hana": "^2",
+        "@sap/xssec": "^3",
+        "express": "^4"
+    },
+    "devDependencies": {
+        "@cap-js/sqlite": "^1",
+        "@sap/cds-dk": "^7",
+        "@sap/eslint-plugin-cds": "^3",
+        "@sap/ux-specification": "^1.120.10",
+        "eslint": "^9",
+        "rimraf": "^3.0.2"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "watch-booksui": "cds watch --open booksui/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy cap-attachment --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    },
+    "cds": {
+        "requires": {
+            "[production]": {
+                "db": "hana",
+                "auth": "xsuaa"
+            },
+            "attachments": {
+                "kind": "db"
+            }             
+        }
+    },
+    "sapux": [
+        "app/booksui"
+    ]
 }
